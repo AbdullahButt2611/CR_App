@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors
 
 import 'package:cr_app/main.dart';
+import 'package:cr_app/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 
 class StudentNotificationScreen extends StatelessWidget{
@@ -19,9 +20,11 @@ class StudentNotificationScreen extends StatelessWidget{
         elevation: 10,
         backgroundColor: Colors.cyan.shade600,
 
-        leading: Container(
-          child: Image.asset('assets/images/logo.png'),
-        ),
+        actions: <Widget>[
+          Container(
+            child: Image.asset('assets/images/logo.png'),
+          ),
+        ], 
 
         shape: const RoundedRectangleBorder(
 
@@ -51,6 +54,8 @@ class StudentNotificationScreen extends StatelessWidget{
 
         ),
       ),
+
+      drawer: NavigationDrawer(),
 
     );
 
