@@ -1,6 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
+import 'package:cr_app/student_notification_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:cr_app/main.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget{
@@ -22,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // Push Replacement is used because we dont want the splash screen to remain in the stack 
       // i.e: The back button shouldn't work to take us back to splash screen so the new entry shall 
       // be replaced with the previous entry
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MyHomePage(title: "Welcome to CR App")))
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const StudentNotificationScreen()))
 
 
     });
@@ -42,6 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                
                 Image(image: AssetImage("assets/images/logo_text.png"), width: 200),
 
                 SizedBox(
