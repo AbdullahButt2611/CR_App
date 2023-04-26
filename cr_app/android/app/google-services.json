@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "512170595789",
+    "project_id": "cr-app-6545e",
+    "storage_bucket": "cr-app-6545e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512170595789:android:4d45af91c34585592f6084",
+        "android_client_info": {
+          "package_name": "com.example.cr_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "512170595789-3gkv4qolujltbvrhjpluslvcddqjnglo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9yxlI7-agoAP0Me4x3VaAfYiNNN4sbxY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "512170595789-3gkv4qolujltbvrhjpluslvcddqjnglo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

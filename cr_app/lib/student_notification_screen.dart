@@ -1333,7 +1333,7 @@ class StudentNotificationScreen extends StatelessWidget{
 
       ),
 
-      drawer: NavigationDrawer(),
+      drawer: NavigationDrawer(role: "Student", id: -1),
 
     );
 

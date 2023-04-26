@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cr_app/signup_screen.dart';
 import 'package:cr_app/student_notification_screen.dart';
 import 'package:cr_app/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -169,7 +170,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(
+                            builder: (context) => const SignUpScreen(),
+                          )
+                        );
+                      },
                       child: Text(
                         "Sign Up",
                         style: TextStyle(

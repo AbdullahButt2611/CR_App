@@ -21,13 +21,7 @@ class WelcomeScreen extends StatelessWidget{
         foregroundColor: Colors.cyan.shade100,
         title: const Text("CR Application"),
         elevation: 10,
-        backgroundColor: Colors.cyan.shade600,
-
-        actions: <Widget>[
-          Container(
-            child: Image.asset('assets/images/logo.png'),
-          ),
-        ], 
+        backgroundColor: Colors.cyan.shade600, 
 
         shape: const RoundedRectangleBorder(
 
@@ -71,7 +65,7 @@ class WelcomeScreen extends StatelessWidget{
 
       ),
 
-      drawer: NavigationDrawer(),
+      drawer: NavigationDrawer(role: role, id: id),
 
       
     );
