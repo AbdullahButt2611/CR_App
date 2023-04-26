@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cr_app/main.dart';
+import 'package:cr_app/student_notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -56,7 +57,7 @@ class NavigationDrawer extends StatelessWidget{
               Navigator.push(
                 context, 
                 MaterialPageRoute(
-                  builder: (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
+                  builder: (context) => const StudentNotificationScreen(),
                 )
               );
             },
