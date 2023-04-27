@@ -2,6 +2,8 @@
 
 import 'dart:async';
 import 'package:cr_app/login_screen.dart';
+import 'package:cr_app/welcome_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +26,16 @@ class _SplashScreenState extends State<SplashScreen> {
       // Push Replacement is used because we dont want the splash screen to remain in the stack 
       // i.e: The back button shouldn't work to take us back to splash screen so the new entry shall 
       // be replaced with the previous entry
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()))
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData){
+            return WelcomeScreen(role: "Student", id: -1);
+          }else {
+            return const LoginScreen();
+          }
+        },
+        )))
 
 
     });

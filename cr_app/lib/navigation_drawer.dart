@@ -2,15 +2,18 @@
 
 import 'package:cr_app/main.dart';
 import 'package:cr_app/student_notification_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NavigationDrawer extends StatelessWidget{
 
-  const NavigationDrawer({super.key, required this.role, required this.id});
+  NavigationDrawer({super.key, required this.role, required this.id});
 
   final String role;
   final int id;
+
+  var user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +127,20 @@ class NavigationDrawer extends StatelessWidget{
           ListTile(
             leading: Icon(Icons.logout_outlined, color: Colors.white,),
             title: Text("Log Out", style: TextStyle(color: Colors.white),),
+            onTap: (){
+              // Navigator.pop(context);
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(
+              //     builder: (context) => const StudentNotificationScreen(),
+              //   )
+              // );
+              
+              if(role == "Student"){
+                FirebaseAuth.instance.signOut();
+              }
+
+            },
           ),
     
         ],

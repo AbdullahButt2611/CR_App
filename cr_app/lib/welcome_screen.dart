@@ -1,19 +1,25 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:cr_app/navigation_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget{
 
-  const WelcomeScreen({super.key, required this.role, required this.id});
+  WelcomeScreen(
+    {super.key, required this.role, required this.id}
+  );
 
   final String role;
   final int id;
 
+  var user = FirebaseAuth.instance.currentUser;
+
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
 
       appBar: AppBar(

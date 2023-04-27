@@ -1,10 +1,13 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, non_constant_identifier_names
 
 import 'package:cr_app/signup_screen.dart';
 import 'package:cr_app/student_notification_screen.dart';
 import 'package:cr_app/welcome_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -127,12 +130,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                         context, 
                         MaterialPageRoute(
-                          builder: (context) => const WelcomeScreen(role: "Admin", id: -1),
+                          builder: (context) => WelcomeScreen(role: "Admin", id: -1),
                         )
                       );
                     }
 
                     if(_formfield.currentState!.validate()){
+                      SignIn();
                       emailController.clear();
                       passController.clear();
                     }
@@ -227,5 +231,17 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+  
+  Future SignIn() async{
+    try{
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(), 
+        password: passController.text.trim(),
+      );
+    }
+    on FirebaseAuthException catch (e){
+      print(e);
+    };
   }
 }
