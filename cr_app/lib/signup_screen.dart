@@ -4,6 +4,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cr_app/login_screen.dart';
 import 'package:cr_app/signup_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -28,6 +29,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var _section = "-1";
   bool passToggle = true;
 
+  final  databaseRef = FirebaseDatabase.instance.ref('Student');
+  final bool loading = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +47,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
           final User user = FirebaseAuth.instance.currentUser as User;
           final uid = user.uid;
 
+          // DateTime.now().millisecondsSinceEpoch.toString()
+          databaseRef.child(uid).set({
 
+            'fullName': controller.fullName.text.trim(), 
+            'regNo': controller.regdNo.text.trim(), 
+            'semester': int.parse(controller.semester.toString()), 
+            'profilePicture': '', 
+            'section': controller.section.toString(), 
+            'session': controller.session.text.trim(),
+            'id': uid, 
+            
+          }).then((value){
 
+            Fluttertoast.showToast(
+              msg: "User Added Successfully",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
 
+            // Removing all the text from inpt boxes and moving the user to login screen
+            controller.fullName.clear();
+            controller.regdNo.clear();
+            controller.email.clear();
+            controller.password.clear();
+            controller.session.clear();
+            Navigator.of(context).pop();
 
-
-          // Removing all the text from inpt boxes and moving the user to login screen
-          controller.fullName.clear();
-          controller.regdNo.clear();
-          controller.email.clear();
-          controller.password.clear();
-          controller.session.clear();
-          Navigator.of(context).pop();
+          }).onError((error, stackTrace){
+            Fluttertoast.showToast(
+              msg: error.toString(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+          });
 
         }
       }
@@ -414,7 +448,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 InkWell(
                   onTap: () {
                   
-                    if(_formfield.currentState!.validate() && _value != "-1" && _section == "-1"){
+                    if(_formfield.currentState!.validate() && _value != "-1" && _section != "-1"){
                       SignUp();
                     }
                     else{

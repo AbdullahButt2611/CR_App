@@ -12,7 +12,7 @@ class WelcomeScreen extends StatelessWidget{
   );
 
   final String role;
-  final int id;
+  final String id;
 
   var user = FirebaseAuth.instance.currentUser;
 

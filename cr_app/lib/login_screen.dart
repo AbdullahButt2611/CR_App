@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                         context, 
                         MaterialPageRoute(
-                          builder: (context) => WelcomeScreen(role: "Admin", id: -1),
+                          builder: (context) => WelcomeScreen(role: "Admin", id: "-1"),
                         )
                       );
                     }

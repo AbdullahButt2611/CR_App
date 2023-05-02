@@ -30,7 +30,9 @@ class _SplashScreenState extends State<SplashScreen> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData){
-            return WelcomeScreen(role: "Student", id: -1);
+            final User user = FirebaseAuth.instance.currentUser as User;
+            final uid = user.uid;
+            return WelcomeScreen(role: "Student", id: uid);
           }else {
             return const LoginScreen();
           }
