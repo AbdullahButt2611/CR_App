@@ -110,8 +110,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       return "Aleast 6 Characters Required";
                     }
 
-
-
                   },
 
 

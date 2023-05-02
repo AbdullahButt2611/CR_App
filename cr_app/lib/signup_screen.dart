@@ -1,9 +1,13 @@
-// ignore_for_file: prefer_const_constructors, dead_code, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, dead_code, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cr_app/login_screen.dart';
 import 'package:cr_app/signup_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:flutter/scheduler.dart';
 
 class SignUpScreen extends StatefulWidget{
   const SignUpScreen({super.key});
@@ -15,15 +19,72 @@ class SignUpScreen extends StatefulWidget{
 class _SignUpScreenState extends State<SignUpScreen> {
 
   final controller = Get.put(SignUpController());
-  final _formKey = GlobalKey<FormState>();
+  final _formfield = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passController = TextEditingController();
 
   // final semesters = ["1", "2", "3", "4", "5", "6", "7", "8"];
   var _value = "-1";
   var _section = "-1";
   bool passToggle = true;
 
+
   @override
   Widget build(BuildContext context) {
+
+    Future SignUp() async{
+      try{
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: controller.email.text.trim(), 
+          password: controller.password.text.trim(),
+        );
+
+        if(FirebaseAuth.instance.currentUser!=null){
+          final User user = FirebaseAuth.instance.currentUser as User;
+          final uid = user.uid;
+
+
+
+
+
+
+          // Removing all the text from inpt boxes and moving the user to login screen
+          controller.fullName.clear();
+          controller.regdNo.clear();
+          controller.email.clear();
+          controller.password.clear();
+          controller.session.clear();
+          Navigator.of(context).pop();
+
+        }
+      }
+      on FirebaseAuthException catch (e){
+        print(e);
+
+        // AwesomeDialog(
+        //   context: context, 
+        //   dialogType: DialogType.error,
+        //   animType: AnimType.scale,
+        //   showCloseIcon: true,
+        //   title: e.code,
+        //   desc: e.message,
+        //   btnCancelOnPress: (){},
+        //   btnOkOnPress: (){},
+
+        // ).show();
+
+        Fluttertoast.showToast(
+          msg: e.message.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+
+      };
+    }
     
     return Scaffold(
       body: Container(
@@ -37,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
     
         child: Form(
-          key: _formKey,
+          key: _formfield,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(top: 30.0),
             child: Column(
@@ -64,6 +125,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       prefixIcon: Icon(Icons.person_outline_rounded),
                       border: OutlineInputBorder(),
                     ),
+
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                    validator: (value){
+
+                      bool nameValid = RegExp(r'^[a-zA-Z]+([ ][a-zA-Z]+)?([ ][a-zA-Z]+)?$').hasMatch(value.toString());
+                      
+                      if(value!.isEmpty){
+                        return "Enter Your Full Name";
+                      }
+                      else if(!nameValid){
+                        return "Only alphabets and spaces are allowed";
+                      }
+
+                    },
+
                   ),
                 ),
           
@@ -77,6 +154,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       prefixIcon: Icon(Icons.credit_card),
                       border: OutlineInputBorder(),
                     ),
+
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                    validator: (value){
+
+                      bool regValid = RegExp(r'^\d{4}-[A-Z]{2,3}-\d{1,3}$').hasMatch(value.toString());
+                      
+                      if(value!.isEmpty){
+                        return "Enter Your Registration Number";
+                      }
+                      else if(!regValid){
+                        return "Pattern: 2020-CS-00";
+                      }
+
+                    },
                   ),
                 ),
           
@@ -132,7 +224,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                     onChanged: (v){
                       _value = v.toString();
-                      controller.semester = v.toString();
+                      if(_value == "-1")
+                      {
+                        Fluttertoast.showToast(
+                          msg: "Please Choose A Valid Semester",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.TOP,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red.shade900,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                          
+                        );
+                      }
+                      else{
+                        controller.semester = v.toString();
+                      }
                     },
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.cast_for_education),
@@ -145,6 +252,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                    validator: (value){
+
+                      bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value.toString());
+                      bool formatValid = RegExp(r'^\d{4}[a-zA-Z]{2}\d{1,3}@student\.uet\.edu\.pk$').hasMatch(value.toString());
+                      
+                      if(value!.isEmpty){
+                        return "Enter Email";
+                      }
+                      else if(!emailValid){
+                        return "Enter Valid Email";
+                      }
+                      else if(!formatValid){
+                        return "Enter Official Email";
+                      }
+
+                    },
 
                     controller: controller.email,
                     keyboardType: TextInputType.emailAddress,
@@ -160,6 +285,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
+
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value){
+
+                        if(value!.isEmpty){
+                          return "Enter Password";
+                        }
+                        else if(controller.password.text.length < 6){
+                          return "Aleast 6 Characters Required";
+                        }
+
+                      },
 
                       controller: controller.password,
                       keyboardType: TextInputType.emailAddress,
@@ -196,6 +333,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       prefixIcon: Icon(Icons.numbers),
                       border: OutlineInputBorder(),
                     ),
+
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                    validator: (value){
+
+                      bool sessionValid = RegExp(r'^\d{4}$').hasMatch(value.toString());
+                      
+                      if(value!.isEmpty){
+                        return "Enter Session";
+                      }
+                      else if(!sessionValid){
+                        return "Enter 4 Digit Session";
+                      }
+
+                    },
                   ),
                 ),
 
@@ -235,7 +387,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                     onChanged: (v){
                       _section = v.toString();
-                      controller.section = v.toString();
+                      if(_section == "-1")
+                      {
+                        Fluttertoast.showToast(
+                          msg: "Please Choose A Valid Section",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.TOP,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red.shade900,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                          
+                        );
+                      }
+                      else{
+                        controller.section = v.toString();
+                      }
                     },
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.pie_chart),
@@ -246,20 +413,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 InkWell(
                   onTap: () {
-                    
-                    // if(emailController.text == "admin@uet" && passController.text == "admin12345")
-                    // {
-                    //   Navigator.pop(context);
-                    //   Navigator.push(
-                    //     context, 
-                    //     MaterialPageRoute(
-                    //       builder: (context) => const WelcomeScreen(role: "Admin", id: -1),
-                    //     )
-                    //   );
-                    // }
-
-                    if(_formKey.currentState!.validate()){
-                      SignUpController.instance.RegisterUser(controller.email.text.trim(), controller.password.text.trim());
+                  
+                    if(_formfield.currentState!.validate() && _value != "-1" && _section == "-1"){
+                      SignUp();
+                    }
+                    else{
+                      Fluttertoast.showToast(
+                        msg: "Check Your Inputs and Try Again",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.TOP,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.cyan.shade600,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
                     }
 
                   },
@@ -325,7 +492,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
 
-
+    
     
     
   }
