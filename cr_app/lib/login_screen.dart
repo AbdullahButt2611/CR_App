@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, non_constant_identifier_names
 
+import 'package:cr_app/forgot_password_screen.dart';
 import 'package:cr_app/signup_screen.dart';
 import 'package:cr_app/student_notification_screen.dart';
 import 'package:cr_app/welcome_screen.dart';
@@ -7,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -85,7 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   keyboardType: TextInputType.emailAddress,
                   controller: passController,
                   obscureText: passToggle,                            // For Toggling the Hide Password
-
                   decoration: InputDecoration(
                     labelText: "Password",
                     border: OutlineInputBorder(),
@@ -210,7 +211,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordScreen(),
+                          )
+                        );
+                      },
                       child: Text(
                         "Forgot Password?",
                         style: TextStyle(
@@ -229,6 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  
   }
   
   Future SignIn() async{
@@ -239,7 +248,15 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
     on FirebaseAuthException catch (e){
-      print(e);
+      Fluttertoast.showToast(
+        msg: e.message.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red.shade900,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     };
   }
 }
