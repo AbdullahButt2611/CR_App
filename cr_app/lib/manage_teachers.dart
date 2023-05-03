@@ -20,6 +20,8 @@ class ManageTeachers extends StatefulWidget{
 class _ManageTeachersState  extends State<ManageTeachers>{
 
   final ref = FirebaseDatabase.instance.ref("Teacher");
+  final searchFilter = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,60 +88,139 @@ class _ManageTeachersState  extends State<ManageTeachers>{
               ),
             ),
 
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: searchFilter,
+                decoration: InputDecoration(
+                  hintText: "Search",
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    
+                  });
+                },
+              ),
+            ),
+
             SizedBox(
               height: 600.0,
               child: FirebaseAnimatedList(
           
                 query: ref,
                 itemBuilder: ((context, snapshot, animation, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Card(
-                      shadowColor: Colors.grey.shade300,
-                      elevation: 2.0,
-                      color: Colors.cyan.shade700,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                      
-                              Text(
-                                snapshot.child('fullName').value.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 24.0,
+
+                  final name = snapshot.child('fullName').value.toString();
+                  
+                  if(searchFilter.text.isEmpty){
+
+                    return Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Card(
+                        shadowColor: Colors.grey.shade300,
+                        elevation: 2.0,
+                        color: Colors.cyan.shade700,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                        
+                                Text(
+                                  snapshot.child('fullName').value.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 24.0,
+                                  ),
                                 ),
-                              ),
-                      
-                              Text(
-                                snapshot.child('designation').value.toString(),
-                                style: TextStyle(
-                                  color: Colors.grey.shade100,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18.0,
+                        
+                                Text(
+                                  snapshot.child('designation').value.toString(),
+                                  style: TextStyle(
+                                    color: Colors.grey.shade100,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18.0,
+                                  ),
                                 ),
-                              ),
-                      
-                              Text(
-                                snapshot.child('email').value.toString(),
-                                style: TextStyle(
-                                  color: Colors.cyan.shade100,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16.0,
+                        
+                                Text(
+                                  snapshot.child('email').value.toString(),
+                                  style: TextStyle(
+                                    color: Colors.cyan.shade100,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.0,
+                                  ),
                                 ),
-                              ),
-                      
-                            ],
+                        
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
+                    );  
+
+                  }
+                  else if(name.toLowerCase().contains(searchFilter.text.toLowerCase())){
+
+                    return Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Card(
+                        shadowColor: Colors.grey.shade300,
+                        elevation: 2.0,
+                        color: Colors.cyan.shade700,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                        
+                                Text(
+                                  snapshot.child('fullName').value.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 24.0,
+                                  ),
+                                ),
+                        
+                                Text(
+                                  snapshot.child('designation').value.toString(),
+                                  style: TextStyle(
+                                    color: Colors.grey.shade100,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                        
+                                Text(
+                                  snapshot.child('email').value.toString(),
+                                  style: TextStyle(
+                                    color: Colors.cyan.shade100,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                        
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ); 
+
+                  }else{
+                    return Container();
+                  }
+                  
+                  
                 }),
                 
               ),
