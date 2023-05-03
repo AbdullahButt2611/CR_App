@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cr_app/login_screen.dart';
 import 'package:cr_app/main.dart';
+import 'package:cr_app/manage_teachers.dart';
 import 'package:cr_app/student_notification_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -22,6 +24,7 @@ class NavigationDrawer extends StatelessWidget{
   
   @override
   Widget build(BuildContext context) {
+    
 
     return Drawer(
 
@@ -36,7 +39,9 @@ class NavigationDrawer extends StatelessWidget{
         
         padding: EdgeInsets.zero,
         children: [
-    
+          
+          // ====================     For Students    ==============================
+
           (role == "Student") ? StreamBuilder(
             stream: databaseStuRef.child(id).onValue,
             builder: (context, AsyncSnapshot snapshot){
@@ -110,7 +115,7 @@ class NavigationDrawer extends StatelessWidget{
           ),
           
     
-          (role != "Student") ? ListTile(
+          (role == "Student") ? ListTile(
             focusColor: Colors.cyan.shade100,
             leading: Icon(Icons.notifications, color: Colors.white,),
             title: Text("Notifications", style: TextStyle(color: Colors.white),),
@@ -124,6 +129,7 @@ class NavigationDrawer extends StatelessWidget{
               );
             },
           ) :
+          SizedBox(),
     
           ListTile(
             leading: Icon(Icons.calendar_month, color: Colors.white,),
@@ -144,6 +150,34 @@ class NavigationDrawer extends StatelessWidget{
             leading: Icon(Icons.view_timeline_outlined, color: Colors.white,),
             title: Text("Time Table", style: TextStyle(color: Colors.white),),
           ),
+
+
+
+          // =======================    For Admin  ==================================
+
+          (role == "Admin") ? ListTile(
+            leading: Icon(Icons.manage_accounts, color: Colors.white,),
+            title: Text("Manage Teachers", style: TextStyle(color: Colors.white),),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => const ManageTeachers(role: "Admin", id: "-1"),
+                )
+              );
+            },
+          ) :
+          SizedBox(),
+
+
+
+
+
+
+
+          // =======================    Same For All  ==================================
     
           ListTile(
             leading: Icon(Icons.account_circle, color: Colors.white,),
@@ -179,6 +213,16 @@ class NavigationDrawer extends StatelessWidget{
               
               if(role == "Student"){
                 FirebaseAuth.instance.signOut();
+              }
+              else if(role == "Admin"){
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  )
+                );
               }
 
             },
