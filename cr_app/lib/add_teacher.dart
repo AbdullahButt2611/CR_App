@@ -80,7 +80,7 @@ class _AddTeacherState  extends State<AddTeacher>{
                 Padding(
                   padding: const EdgeInsets.only(bottom: 38.0),
                   child: Text(
-                    "Teacher's Record",
+                    "Teacher Record",
                     style: TextStyle(
                       color: Colors.pink.shade600,
                       fontWeight: FontWeight.w700,
