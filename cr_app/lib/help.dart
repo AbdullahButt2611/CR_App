@@ -23,7 +23,7 @@ class _HelpState extends State<Help>{
 
   @override
   void initState() {
-    _controller = VideoPlayerController.network("https://www.youtube.com/watch?v=ub-6Ica9aWg")..initialize().then((_){
+    _controller = VideoPlayerController.network("https://github.com/AbdullahButt2611/CR_App/blob/main/cr_app/assets/videos/help.mp4")..initialize().then((_){
       setState(() {
         
       });
