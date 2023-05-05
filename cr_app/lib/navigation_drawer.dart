@@ -5,6 +5,7 @@ import 'package:cr_app/login_screen.dart';
 import 'package:cr_app/main.dart';
 import 'package:cr_app/manage_teachers.dart';
 import 'package:cr_app/profileImageUpdate.dart';
+import 'package:cr_app/shared_preferences.dart';
 import 'package:cr_app/student_notification_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -216,6 +217,16 @@ class NavigationDrawer extends StatelessWidget{
           ListTile(
             leading: Icon(Icons.settings, color: Colors.white,),
             title: Text("App Settings", style: TextStyle(color: Colors.white),),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => SharedPreference(),
+                )
+              );
+            },
           ),
     
           ListTile(
