@@ -4,6 +4,7 @@ import 'package:cr_app/help.dart';
 import 'package:cr_app/login_screen.dart';
 import 'package:cr_app/main.dart';
 import 'package:cr_app/manage_teachers.dart';
+import 'package:cr_app/privacy_policy.dart';
 import 'package:cr_app/profileImageUpdate.dart';
 import 'package:cr_app/shared_preferences.dart';
 import 'package:cr_app/student_notification_screen.dart';
@@ -212,6 +213,16 @@ class NavigationDrawer extends StatelessWidget{
           ListTile(
             leading: Icon(Icons.privacy_tip_outlined, color: Colors.white,),
             title: Text("Privacy Policy", style: TextStyle(color: Colors.white),),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => PrivacyPoicy(),
+                )
+              );
+            },
           ),
     
           ListTile(
