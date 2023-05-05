@@ -46,6 +46,8 @@ dependencies:
   awesome_dialog: ^3.0.2
   fluttertoast: ^8.2.1
   firebase_database: ^10.1.1
+  image_picker: ^0.8.7+4
+  video_player: ^2.6.1
 
 dev_dependencies:
   flutter_test:

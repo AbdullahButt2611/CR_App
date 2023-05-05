@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cr_app/help.dart';
 import 'package:cr_app/login_screen.dart';
 import 'package:cr_app/main.dart';
 import 'package:cr_app/manage_teachers.dart';
+import 'package:cr_app/profileImageUpdate.dart';
 import 'package:cr_app/student_notification_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -45,46 +47,66 @@ class NavigationDrawer extends StatelessWidget{
           (role == "Student") ? StreamBuilder(
             stream: databaseStuRef.child(id).onValue,
             builder: (context, AsyncSnapshot snapshot){
-              if(!snapshot.hasData)
-              {
-                return Center(child: CircularProgressIndicator(),);
-              }
-              else if(snapshot.hasData){
+            try{
+                if(!snapshot.hasData)
+                {
+                  return Center(child: CircularProgressIndicator(),);
+                }
+                else if(snapshot.hasData){
 
-                Map<dynamic, dynamic> map = snapshot.data.snapshot.value;
-
-                return UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
-    
-                    color: Colors.cyan.shade600,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10.0),
-                      bottomRight: Radius.circular(10.0),
-                      topRight: Radius.circular(30.0)
-                    ),
-          
-                  ),
-                  accountName: Text(map['fullName']), 
-                  accountEmail: Text((user != null ? user!.email : "No Email").toString(),),
-                  currentAccountPicture: CircleAvatar(
-          
-                    backgroundColor: Colors.cyan.shade200,
-                    backgroundImage: NetworkImage("https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"),
                   
-                  ),
-                );
+                  Map<dynamic, dynamic> map = snapshot.data.snapshot.value;
+
+                  return UserAccountsDrawerHeader(
+                    decoration: BoxDecoration(
+      
+                      color: Colors.cyan.shade600,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                        topRight: Radius.circular(30.0)
+                      ),
+            
+                    ),
+                    accountName: Text(map['fullName']), 
+                    accountEmail: Text((user != null ? user!.email : "No Email").toString(),),
+                    currentAccountPicture: InkWell(
+                      onTap: (){
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(
+                            builder: (context) => ProfileImageUpdate(role: this.role, id: this.id,),
+                          )
+                        );
+                      },
+                      child: CircleAvatar(
+                                
+                        backgroundColor: Colors.cyan.shade200,
+                        backgroundImage: NetworkImage("https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"),
+                      
+                      ),
+                    ),
+                  );
+                }
+                else{
+                  Fluttertoast.showToast(
+                    msg: "Something Went Wrong",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.TOP,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red.shade900,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                  
+                }
+                  
+
+                  
 
               }
-              else{
-                Fluttertoast.showToast(
-                  msg: "Something Went Wrong",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.TOP,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.red.shade900,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
+              catch(e){
                 return Padding(
                   padding: const EdgeInsets.only(top: 36.0),
                   child: Image.asset(
@@ -94,6 +116,8 @@ class NavigationDrawer extends StatelessWidget{
                   ),
                 );
               }
+              throw("Hey");
+                
             },
     
             
@@ -197,6 +221,16 @@ class NavigationDrawer extends StatelessWidget{
           ListTile(
             leading: Icon(Icons.help_outline, color: Colors.white,),
             title: Text("Help", style: TextStyle(color: Colors.white),),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => Help(role: this.role, id: this.id),
+                )
+              );
+            },
           ),
     
           ListTile(

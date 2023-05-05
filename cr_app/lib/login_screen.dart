@@ -2,6 +2,7 @@
 
 import 'package:cr_app/forgot_password_screen.dart';
 import 'package:cr_app/signup_screen.dart';
+import 'package:cr_app/splash_screen.dart';
 import 'package:cr_app/student_notification_screen.dart';
 import 'package:cr_app/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -245,7 +246,17 @@ class _LoginScreenState extends State<LoginScreen> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(), 
         password: passController.text.trim(),
-      );
+      ).then((value) {
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => SplashScreen(),
+          )
+        );
+      });
+
+      
+        
     }
     on FirebaseAuthException catch (e){
       Fluttertoast.showToast(
