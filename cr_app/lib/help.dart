@@ -23,7 +23,7 @@ class _HelpState extends State<Help>{
 
   @override
   void initState() {
-    _controller = VideoPlayerController.network("https://github.com/AbdullahButt2611/CR_App/blob/main/cr_app/assets/videos/help.mp4")..initialize().then((_){
+    _controller = VideoPlayerController.network("https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4")..initialize().then((_){
       setState(() {
         
       });
@@ -76,9 +76,12 @@ class _HelpState extends State<Help>{
             SizedBox(height: 36.0,),
 
             Container(
-              color: Colors.black,
               width: 350.0,
               height: 450.0,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+              ),
               child: _controller.value.isInitialized?  VideoPlayer(_controller)
               :
               Center(child: Text("No Video Yet Provided"),)
@@ -96,6 +99,7 @@ class _HelpState extends State<Help>{
             _controller.value.isPlaying? _controller.pause() : _controller.play();
           });
         },
+        child: Icon(_controller.value.isPlaying? Icons.pause : Icons.play_arrow_rounded),
       ),
 
     );
