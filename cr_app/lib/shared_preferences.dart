@@ -1,9 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cr_app/navigation_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class SharedPreference extends StatefulWidget{
   const SharedPreference({super.key});
@@ -15,10 +19,7 @@ class SharedPreference extends StatefulWidget{
 
 class _SharedPreferenceState extends State<SharedPreference>{
 
-  String name='';
-  int age=0;
-  double lucky=0.0;
-  bool isLogged=false;
+  List<String> myList = [];
 
   @override
   void initState() {
@@ -28,11 +29,15 @@ class _SharedPreferenceState extends State<SharedPreference>{
   }
 
   void isLogin() async{
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    name = sp.getString('string') ?? '';
-    age = sp.getInt('number') ?? 0;
-    lucky = sp.getDouble('Lucky Number') ?? 0.0;
-    isLogged = sp.getBool('isVerified') ?? false;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? listString = prefs.getString('activityList');
+
+    if (listString != null) {
+      List<dynamic> decodedList = jsonDecode(listString);
+      myList = List<String>.from(decodedList);
+    } else {
+      print('List not found in SharedPreferences');
+    }
     setState(() {
       
     });
@@ -45,7 +50,7 @@ class _SharedPreferenceState extends State<SharedPreference>{
       appBar: AppBar(
 
         foregroundColor: Colors.cyan.shade100,
-        title: const Text("Shared Preferences"),
+        title: const Text("Recent Login Activity"),
         elevation: 10,
         backgroundColor: Colors.cyan.shade600,
 
@@ -70,33 +75,36 @@ class _SharedPreferenceState extends State<SharedPreference>{
 
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(name.toString()),
-            Text(age.toString()),
-            Text(lucky.toString()),
-            Text(isLogged.toString()),
+            Expanded(
+              child: ListView.builder(
+                itemCount: myList.length, 
+                itemBuilder: (BuildContext context, int index){
+                  final reversedList = myList.reversed.toList();
+                  return Container(
+                    margin: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0, bottom: 30.0),
+                    decoration: BoxDecoration(
+                      color: Colors.cyan.shade900,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      reversedList[index],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            // ...myList.map((text) => Text(text)).toList(),
+            
           ],
         ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: (() async{
-          SharedPreferences sp = await SharedPreferences.getInstance();
-
-          sp.setInt('number', int.parse((Random().nextInt(100) + 50).toString()));
-          sp.setDouble('Lucky Number', double.parse((Random().nextDouble() * 256).toString()));
-          sp.setString('string', 'Abdullah Butt');
-          sp.setBool('isVerified', false);
-
-          name = sp.getString('string').toString();
-
-          setState(() {
-            
-          });
-        }),
-        child: Icon(Icons.add),
       ),
 
     );

@@ -21,7 +21,7 @@ class _PrivacyPolicyState extends State<PrivacyPoicy> with TickerProviderStateMi
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
    @override
@@ -90,7 +90,7 @@ class _PrivacyPolicyState extends State<PrivacyPoicy> with TickerProviderStateMi
                   tabs: [
                     Tab(text: "System Policy",),
                     Tab(text: "Personal Information",),
-                    Tab(text: "SQFLite",),
+                    // Tab(text: "SQFLite",),
                   ],
                 ),
               ),
@@ -154,7 +154,7 @@ class _PrivacyPolicyState extends State<PrivacyPoicy> with TickerProviderStateMi
                     ),
                   ),
                 
-                  AssignmentScreen(),
+                  // AssignmentScreen(),
                 ],
               ),
             ),

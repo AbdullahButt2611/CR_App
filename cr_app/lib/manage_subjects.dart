@@ -2,6 +2,7 @@
 
 // import 'dart:js';
 
+import 'package:cr_app/add_subject.dart';
 import 'package:cr_app/add_teacher.dart';
 import 'package:cr_app/navigation_drawer.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,26 +10,24 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ManageTeachers extends StatefulWidget{
-  const ManageTeachers({super.key, required this.role, required this.id});
-
-  final String role;
-  final String id;
+class ManageSubjects extends StatefulWidget{
+  const ManageSubjects({super.key});
   
   @override
-  State<StatefulWidget> createState() => _ManageTeachersState();
+  State<StatefulWidget> createState() => _ManageSubjectsState();
 
 }
 
-class _ManageTeachersState  extends State<ManageTeachers>{
+class _ManageSubjectsState  extends State<ManageSubjects>{
 
-  final ref = FirebaseDatabase.instance.ref("Teacher");
+  final ref = FirebaseDatabase.instance.ref("Subject");
   final searchFilter = TextEditingController();
 
   final nameController = TextEditingController();
-  final designController = TextEditingController();
-  final domainController = TextEditingController();
-  final contactController = TextEditingController();
+  final teacherController = TextEditingController();
+  final sessionController = TextEditingController();
+  final sectionController = TextEditingController();
+  final semesterController = TextEditingController();
 
 
   @override
@@ -39,7 +38,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
       appBar: AppBar(
 
         foregroundColor: Colors.cyan.shade100,
-        title: const Text("Manage Teachers"),
+        title: const Text("Manage Subjects"),
         elevation: 10,
         backgroundColor: Colors.cyan.shade600,
 
@@ -65,7 +64,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
           Navigator.push(
             context, 
             MaterialPageRoute(
-              builder: (context) => const AddTeacher(role: "Admin", id: "-1"),
+              builder: (context) => const AddSubject(role: "Admin", id: "-1"),
             )
           );
         },
@@ -85,7 +84,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
               padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
               child: Center(
                 child: Text(
-                  "Teachers Records",
+                  "Subjects Records",
                   style: TextStyle(
                     color: Colors.pink.shade600,
                     fontWeight: FontWeight.w700,
@@ -121,10 +120,11 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                   query: ref,
                   itemBuilder: ((context, snapshot, animation, index) {
 
-                    final name = snapshot.child('fullName').value.toString();
-                    final designation = snapshot.child('designation').value.toString();
-                    final domain = snapshot.child('domain').value.toString();
-                    final contact = snapshot.child('contact').value.toString();
+                    final name = snapshot.child('name').value.toString();
+                    final session = snapshot.child('session').value.toString();
+                    final teacher = snapshot.child('teacher').value.toString();
+                    final semester = snapshot.child('semester').value.toString();
+                    final section = snapshot.child('section').value.toString();
                     final id = snapshot.child('id').value.toString();
                     
                     if(searchFilter.text.isEmpty){
@@ -151,7 +151,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                                     children: [
                           
                                       Text(
-                                        snapshot.child('fullName').value.toString(),
+                                        snapshot.child('name').value.toString(),
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w700,
@@ -160,7 +160,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                                       ),
                           
                                       Text(
-                                        snapshot.child('designation').value.toString(),
+                                        snapshot.child('teacher').value.toString(),
                                         style: TextStyle(
                                           color: Colors.grey.shade100,
                                           fontWeight: FontWeight.w600,
@@ -169,7 +169,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                                       ),
                           
                                       Text(
-                                        snapshot.child('email').value.toString(),
+                                        'Semester ' + snapshot.child('semester').value.toString() + '  -  ' + snapshot.child('session').value.toString() + ' (' + snapshot.child('section').value.toString() + ')',
                                         style: TextStyle(
                                           color: Colors.cyan.shade100,
                                           fontWeight: FontWeight.w500,
@@ -189,7 +189,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                                         child: ListTile(
                                           onTap: (){
                                             Navigator.pop(context);
-                                            showMyDialog(name, designation, domain,contact, id);
+                                            showMyDialog(name, teacher,session, section, semester, id);
                                           },
                                           leading: Icon(Icons.edit),
                                           title: Text("Edit"),
@@ -211,6 +211,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                                   ),
 
                                 ],
+                              
                               ),
                             ),
                           ),
@@ -234,34 +235,72 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                           
-                                  Text(
-                                    snapshot.child('fullName').value.toString(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 24.0,
-                                    ),
+                                      Text(
+                                        snapshot.child('name').value.toString(),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 24.0,
+                                        ),
+                                      ),
+                          
+                                      Text(
+                                        snapshot.child('teacher').value.toString(),
+                                        style: TextStyle(
+                                          color: Colors.grey.shade100,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18.0,
+                                        ),
+                                      ),
+                          
+                                      Text(
+                                        'Semester ' + snapshot.child('semester').value.toString() + '  -  ' + snapshot.child('session').value.toString() + ' (' + snapshot.child('section').value.toString() + ')',
+                                        style: TextStyle(
+                                          color: Colors.cyan.shade100,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                          
+                                    ],
                                   ),
-                          
-                                  Text(
-                                    snapshot.child('designation').value.toString(),
-                                    style: TextStyle(
-                                      color: Colors.grey.shade100,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18.0,
-                                    ),
+
+                                  PopupMenuButton(
+                                    icon: Icon(Icons.more_vert, color: Colors.white,),
+                                    itemBuilder: (context) => [
+
+                                      PopupMenuItem(
+                                        value: 1,
+                                        child: ListTile(
+                                          onTap: (){
+                                            Navigator.pop(context);
+                                            showMyDialog(name, teacher,session, section, semester, id);
+                                          },
+                                          leading: Icon(Icons.edit),
+                                          title: Text("Edit"),
+                                        ),
+                                      ),
+
+                                      PopupMenuItem(
+                                        value: 2,
+                                        onTap: (){
+                                          ref.child(id).remove();
+                                        },
+                                        child: ListTile(
+                                          leading: Icon(Icons.delete_outline),
+                                          title: Text("Delete"),
+                                        ),
+                                      ),
+
+                                    ]
                                   ),
-                          
-                                  Text(
-                                    snapshot.child('email').value.toString(),
-                                    style: TextStyle(
-                                      color: Colors.cyan.shade100,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                          
+
                                 ],
                               ),
                             ),
@@ -290,14 +329,15 @@ class _ManageTeachersState  extends State<ManageTeachers>{
 
   }
 
-  Future<void> showMyDialog(String name, String designation, String domain, String contact, String id) async{
+  Future<void> showMyDialog(String name, String teacher, String session, String section, String semester ,String id) async{
     return showDialog(
       builder: (context){
 
         nameController.text = name;
-        designController.text = designation;
-        domainController.text = domain;
-        contactController.text = contact;
+        teacherController.text = teacher;
+        sessionController.text = session;
+        sectionController.text = section;
+        semesterController.text = semester;
 
         return AlertDialog(
           // title: Text("Update"),
@@ -311,7 +351,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                   Padding(
                     padding: const EdgeInsets.only(bottom: 38.0),
                     child: Text(
-                      "Update Teacher",
+                      "Update Subject",
                       style: TextStyle(
                         color: Colors.pink.shade600,
                         fontWeight: FontWeight.w700,
@@ -326,7 +366,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                       controller: nameController,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
-                        label: Text("Full Name"),
+                        label: Text("Subject Name"),
                         prefixIcon: Icon(Icons.person_outline_rounded),
                         border: OutlineInputBorder(),
                       ),
@@ -338,7 +378,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                         bool nameValid = RegExp(r'^[a-zA-Z]+([ ][a-zA-Z]+)?([ ][a-zA-Z]+)?$').hasMatch(value.toString());
                         
                         if(value!.isEmpty){
-                          return "Enter Your Full Name";
+                          return "Enter Proper Name of Subject";
                         }
                         else if(!nameValid){
                           return "Only alphabets and spaces are allowed";
@@ -352,11 +392,11 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: designController,
+                      controller: teacherController,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
-                        label: Text("Designation"),
-                        prefixIcon: Icon(Icons.alternate_email_rounded),
+                        label: Text("Teacher Name"),
+                        prefixIcon: Icon(Icons.personal_injury),
                         border: OutlineInputBorder(),
                       ),
 
@@ -367,7 +407,7 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                         bool nameValid = RegExp(r'^[a-zA-Z]+([ ][a-zA-Z]+)?([ ][a-zA-Z]+)?$').hasMatch(value.toString());
                         
                         if(value!.isEmpty){
-                          return "Enter Your Designation";
+                          return "Enter Teacher's Name";
                         }
                         else if(!nameValid){
                           return "Only alphabets and spaces are allowed";
@@ -381,11 +421,11 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: domainController,
+                      controller: sessionController,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
-                        label: Text("Domain"),
-                        prefixIcon: Icon(Icons.domain),
+                        label: Text("Session"),
+                        prefixIcon: Icon(Icons.numbers),
                         border: OutlineInputBorder(),
                       ),
 
@@ -393,13 +433,13 @@ class _ManageTeachersState  extends State<ManageTeachers>{
 
                       validator: (value){
 
-                        bool nameValid = RegExp(r'^[a-zA-Z]+([ ][a-zA-Z]+)?([ ][a-zA-Z]+)?$').hasMatch(value.toString());
+                        bool nameValid = RegExp(r'^\d{4}$').hasMatch(value.toString());
                         
                         if(value!.isEmpty){
-                          return "Enter Your Domain of Concern";
+                          return "Enter Offered Session";
                         }
                         else if(!nameValid){
-                          return "Only alphabets and spaces are allowed";
+                          return "Only 4 Digits Allowed";
                         }
 
                       },
@@ -410,10 +450,39 @@ class _ManageTeachersState  extends State<ManageTeachers>{
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: contactController,
+                      controller: semesterController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        label: Text("Contact Number"),
+                        label: Text("Semester"),
+                        prefixIcon: Icon(Icons.book_online_outlined),
+                        border: OutlineInputBorder(),
+                      ),
+
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                      validator: (value){
+
+                        bool nameValid = RegExp(r'^[1-8]$').hasMatch(value.toString());
+                        
+                        if(value!.isEmpty){
+                          return "Enter Semester Number";
+                        }
+                        else if(!nameValid){
+                          return "Only One Digit is Allowed";
+                        }
+
+                      },
+
+                    ),
+                  ),
+            
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: TextFormField(
+                      controller: sectionController,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        label: Text("Section Assigned"),
                         prefixIcon: Icon(Icons.contact_phone_outlined),
                         border: OutlineInputBorder(),
                       ),
@@ -422,13 +491,13 @@ class _ManageTeachersState  extends State<ManageTeachers>{
 
                       validator: (value){
 
-                        bool regValid = RegExp(r'^\d{11}$').hasMatch(value.toString());
+                        bool regValid = RegExp(r'^[a-zA-Z, ]+$').hasMatch(value.toString());
                         
                         if(value!.isEmpty){
-                          return "Enter Your Contact Number";
+                          return "Enter Sections Assigned";
                         }
                         else if(!regValid){
-                          return "Contact should be 11 Digits Long";
+                          return "Only Single Characters and Commas are Allowed";
                         }
 
                       },
@@ -444,10 +513,11 @@ class _ManageTeachersState  extends State<ManageTeachers>{
             InkWell(
                 onTap: () {
                   ref.child(id).update({
-                    'fullName': nameController.text.trim(),
-                    'designation': designController.text.trim(),
-                    'domain': domainController.text.trim(),
-                    'contact': contactController.text.trim(),
+                    'name': nameController.text.trim(),
+                    'teacher': teacherController.text.trim(),
+                    'semester': semesterController.text.trim(),
+                    'session': sessionController.text.trim(),
+                    'section': sectionController.text.trim(),
                   }).then((value){
 
                     Fluttertoast.showToast(

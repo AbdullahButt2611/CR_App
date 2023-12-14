@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cr_app/current_subjects.dart';
+import 'package:cr_app/database_helper.dart';
 import 'package:cr_app/help.dart';
 import 'package:cr_app/login_screen.dart';
 import 'package:cr_app/main.dart';
+import 'package:cr_app/manage_subjects.dart';
 import 'package:cr_app/manage_teachers.dart';
 import 'package:cr_app/privacy_policy.dart';
 import 'package:cr_app/profileImageUpdate.dart';
@@ -22,6 +25,8 @@ class NavigationDrawer extends StatelessWidget{
   final String id;
 
   var user = FirebaseAuth.instance.currentUser;
+
+  String semester = "";
 
   final  databaseStuRef = FirebaseDatabase.instance.ref('Student');
   
@@ -58,7 +63,7 @@ class NavigationDrawer extends StatelessWidget{
 
                   
                   Map<dynamic, dynamic> map = snapshot.data.snapshot.value;
-
+                  this.semester = map['semester'].toString();
                   return UserAccountsDrawerHeader(
                     decoration: BoxDecoration(
       
@@ -157,20 +162,30 @@ class NavigationDrawer extends StatelessWidget{
           ) :
           SizedBox(),
     
-          ListTile(
-            leading: Icon(Icons.calendar_month, color: Colors.white,),
-            title: Text("Attendance", style: TextStyle(color: Colors.white),),
-          ),
-    
-          ListTile(
+
+          (role == "Student") ? ListTile(
             leading: Icon(Icons.menu_book_sharp, color: Colors.white,),
             title: Text("Current Subjects", style: TextStyle(color: Colors.white),),
-          ),
+            onTap: () async{
+              Navigator.pop(context);
+              Navigator.pop(context);
+
+              
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => CurrentSubjects(role: this.role, id: this.id, semester: this.semester,),
+                )
+              );
+            },
+          ): SizedBox(),
     
-          ListTile(
+
+          (role == "Student") ?ListTile(
             leading: Icon(Icons.history_edu_rounded, color: Colors.white,),
             title: Text("Subject History", style: TextStyle(color: Colors.white),),
-          ),
+          ):
+          SizedBox(),
     
           ListTile(
             leading: Icon(Icons.view_timeline_outlined, color: Colors.white,),
@@ -180,6 +195,22 @@ class NavigationDrawer extends StatelessWidget{
 
 
           // =======================    For Admin  ==================================
+
+          (role == "Admin") ? ListTile(
+            leading: Icon(Icons.menu_book_sharp, color: Colors.white,),
+            title: Text("Manage Subjects", style: TextStyle(color: Colors.white),),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => const ManageSubjects(),
+                )
+              );
+            },
+          ): SizedBox(),
+
 
           (role == "Admin") ? ListTile(
             leading: Icon(Icons.manage_accounts, color: Colors.white,),
@@ -207,7 +238,17 @@ class NavigationDrawer extends StatelessWidget{
     
           ListTile(
             leading: Icon(Icons.account_circle, color: Colors.white,),
-            title: Text("Account Settings", style: TextStyle(color: Colors.white),),
+            title: Text("To Do Tasks", style: TextStyle(color: Colors.white),),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => AssignmentScreen(role: role, id: id,),
+                )
+              );
+            },
           ),
     
           ListTile(
@@ -227,7 +268,7 @@ class NavigationDrawer extends StatelessWidget{
     
           ListTile(
             leading: Icon(Icons.settings, color: Colors.white,),
-            title: Text("App Settings", style: TextStyle(color: Colors.white),),
+            title: Text("Recent Activity", style: TextStyle(color: Colors.white),),
             onTap: (){
               Navigator.pop(context);
               Navigator.pop(context);
@@ -292,3 +333,4 @@ class NavigationDrawer extends StatelessWidget{
   }
 
 }
+

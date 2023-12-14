@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:cr_app/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as paths;
@@ -54,6 +57,13 @@ class DatabaseHelper {
 }
 
 class AssignmentScreen extends StatefulWidget {
+
+  const AssignmentScreen({super.key, required this.role, required this.id});
+
+  final String role;
+  final String id;
+
+
   @override
   _AssignmentScreenState createState() => _AssignmentScreenState();
 }
@@ -61,7 +71,7 @@ class AssignmentScreen extends StatefulWidget {
 class _AssignmentScreenState extends State<AssignmentScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  late List<Map<String, dynamic>> _Assignments;
+  late List<Map<String, dynamic>> _Assignments = [];
 
   @override
   void initState() {
@@ -112,31 +122,102 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SQFlite Screen'),
+
+        foregroundColor: Colors.cyan.shade100,
+        title: const Text("Your Tasks"),
+        elevation: 10,
+        backgroundColor: Colors.cyan.shade600,
+
+        actions: <Widget>[
+          Container(
+            child: Image.asset('assets/images/logo.png'),
+          ),
+        ], 
+
+        shape: const RoundedRectangleBorder(
+
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          )
+
+        ),
+
       ),
+
       body: Column(
         children: [
+
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Column(
               children: [
+
+                SizedBox(
+                  height: 20.0,
+                ),
+
+
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(hintText: 'Enter name'),
+                  decoration: InputDecoration(
+                    labelText: "Enter Task Name",
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.add_task_sharp)
+                  ),
                 ),
+
+                SizedBox(
+                  height: 20.0,
+                ),
+
+
                 TextField(
                   controller: _descriptionController,
-                  decoration: InputDecoration(hintText: 'Enter description'),
+                  decoration: InputDecoration(
+                    labelText: "Enter Task Deadline",
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.more_time_rounded)
+                  ),
                 ),
+                
+
+                SizedBox(
+                  height: 20.0,
+                ),
+                
+                
                 ElevatedButton(
                   onPressed: () {
                     _addAssignment();
                   },
-                  child: Text('Add Assignment'),
+
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.pink.shade500, // Change the button's background color here
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0), // Add border radius here
+                    ),
+                  ),
+
+                  child: Container(
+                    height: 50.0,
+                    alignment: Alignment.center,
+                    
+                    child: Text(
+                      "Add Task",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
+          
           Expanded(
             child: ListView.builder(
               itemCount: _Assignments.length,
@@ -205,6 +286,11 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
           ),
         ],
       ),
+
+      drawer: NavigationDrawer(role: widget.role, id: widget.id),
+    
     );
   }
 }
+
+

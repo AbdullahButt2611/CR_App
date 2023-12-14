@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, non_constant_identifier_names
 
+import 'dart:convert';
+
 import 'package:cr_app/forgot_password_screen.dart';
 import 'package:cr_app/signup_screen.dart';
 import 'package:cr_app/splash_screen.dart';
@@ -11,6 +13,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -122,11 +127,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 InkWell(
-                  onTap: () {
+                  onTap: () async{
                     
                     if(emailController.text == "admin@uet" && passController.text == "admin12345")
                     {
                       Navigator.pop(context);
+                      await storeActivity();
                       Navigator.push(
                         context, 
                         MaterialPageRoute(
@@ -247,6 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
         email: emailController.text.trim(), 
         password: passController.text.trim(),
       ).then((value) {
+        storeActivity();
         Navigator.push(
           context, 
           MaterialPageRoute(
@@ -269,5 +276,33 @@ class _LoginScreenState extends State<LoginScreen> {
         fontSize: 16.0,
       );
     };
+  }
+}
+
+
+Future<void> storeActivity() async {
+  // Asynchronous operations go here
+  try {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? listString = prefs.getString('activityList');
+    DateTime now = DateTime.now();
+
+    if (listString != null) {
+
+      List<dynamic> decodedList = jsonDecode(listString);
+      List<String> myList = List<String>.from(decodedList);
+      myList.add(DateFormat('MMMM d, y hh:mm:ss a').format(now));
+      String updatedListString = jsonEncode(myList);
+      await prefs.setString('activityList', updatedListString);
+
+    } else {
+
+      List<String> newList = [DateFormat('MMMM d, y hh:mm:ss a').format(now)];
+      String newListString = jsonEncode(newList);
+      await prefs.setString('activityList', newListString);
+    }
+  } catch (e) {
+    print("Failed to Load Shared Preferences");
   }
 }
